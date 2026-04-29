@@ -1,0 +1,1806 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Olas Limpias — ONG Chile</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ocean: #1a6b7a;
+    --ocean-deep: #0d4a56;
+    --ocean-light: #3a9cb0;
+    --foam: #e8f4f7;
+    --sand: #f2ead8;
+    --sand-dark: #c9b990;
+    --earth: #5c4a2a;
+    --earth-light: #8a7355;
+    --seaweed: #3d6b3e;
+    --seaweed-light: #5a9e5c;
+    --white: #fdfcf9;
+    --text: #2a2018;
+    --text-muted: #6b5d4a;
+    --wave1: #1a6b7a;
+    --wave2: #3a9cb0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--white);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5%;
+    height: 68px;
+    background: rgba(253,252,249,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(26,107,122,0.12);
+    transition: box-shadow 0.3s;
+  }
+
+  nav.scrolled { box-shadow: 0 2px 20px rgba(26,107,122,0.1); }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--ocean-deep);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .nav-logo span {
+    display: inline-block;
+    width: 32px; height: 32px;
+    background: var(--ocean);
+    border-radius: 50% 50% 50% 20%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .nav-logo span::after {
+    content: '~';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -48%);
+    color: white;
+    font-size: 1.1rem;
+    font-family: Georgia, serif;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: color 0.2s;
+    letter-spacing: 0.02em;
+  }
+
+  .nav-links a:hover, .nav-links a.active { color: var(--ocean); }
+
+  .nav-cta {
+    background: var(--ocean);
+    color: white !important;
+    padding: 8px 20px;
+    border-radius: 24px;
+    transition: background 0.2s !important;
+  }
+
+  .nav-cta:hover { background: var(--ocean-deep) !important; color: white !important; }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 24px; height: 2px;
+    background: var(--ocean-deep);
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+
+  /* ── PAGES ── */
+  .page { display: none; padding-top: 68px; min-height: 100vh; }
+  .page.active { display: block; }
+
+  /* ══════════════════════════════
+     HOME PAGE
+  ══════════════════════════════ */
+
+  .hero {
+    position: relative;
+    height: calc(100vh - 68px);
+    min-height: 520px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background: url('DSC_0919.JPG') center/cover no-repeat;
+  }
+
+  .hero-bg-waves {
+    position: absolute;
+    inset: 0;
+    opacity: 0.15;
+  }
+
+  .wave-svg {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 0 8%;
+    max-width: 700px;
+    animation: fadeUp 1s ease both;
+  }
+
+  .hero-tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    color: rgba(255,255,255,0.95);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(255,255,255,0.25);
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 900;
+    color: white;
+    line-height: 1.05;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--sand);
+  }
+
+  .hero p {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.82);
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+    max-width: 520px;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--sand);
+    color: var(--earth);
+    padding: 14px 32px;
+    border-radius: 32px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.25s;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+  }
+
+  .btn-primary:hover { background: white; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+
+  .btn-outline {
+    background: transparent;
+    color: white;
+    padding: 14px 32px;
+    border-radius: 32px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-decoration: none;
+    border: 1.5px solid rgba(255,255,255,0.5);
+    transition: all 0.25s;
+    cursor: pointer;
+    display: inline-block;
+  }
+
+  .btn-outline:hover { border-color: white; background: rgba(255,255,255,0.1); }
+
+  .hero-wave {
+    position: absolute;
+    bottom: -2px; left: 0; right: 0;
+  }
+
+  /* STATS */
+  .stats-strip {
+    background: var(--sand);
+    padding: 3rem 8%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    text-align: center;
+    border-bottom: 1px solid var(--sand-dark);
+  }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: var(--ocean);
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
+    color: var(--earth-light);
+    font-weight: 500;
+    margin-top: 4px;
+    letter-spacing: 0.04em;
+  }
+
+  /* MISSION SECTION */
+  .section { padding: 6rem 8%; }
+
+  .section-label {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ocean);
+    margin-bottom: 1rem;
+  }
+
+  .section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+    max-width: 560px;
+  }
+
+  .section p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--text-muted);
+    max-width: 600px;
+    font-weight: 300;
+  }
+
+  .mission-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+
+  .mission-visual {
+    position: relative;
+    height: 420px;
+    border-radius: 24px 24px 80px 24px;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--ocean-deep), var(--ocean-light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mission-visual svg {
+    width: 70%;
+    opacity: 0.25;
+  }
+
+  .mission-badge {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+    background: white;
+    border-radius: 16px;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  }
+
+  .mission-badge strong {
+    display: block;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    color: var(--ocean);
+  }
+
+  .mission-badge span {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  /* PILLARS */
+  .pillars {
+    background: var(--foam);
+    padding: 6rem 8%;
+  }
+
+  .pillars-header { text-align: center; margin-bottom: 4rem; }
+  .pillars-header h2 { max-width: 100%; }
+
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .pillar-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    border: 1px solid rgba(26,107,122,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .pillar-card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(26,107,122,0.12); }
+
+  .pillar-icon {
+    width: 56px; height: 56px;
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .pillar-icon.ocean { background: #dff0f4; }
+  .pillar-icon.earth { background: #e8f0df; }
+  .pillar-icon.people { background: #fdf3e0; }
+
+  .pillar-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+    color: var(--text);
+  }
+
+  .pillar-card p {
+    font-size: 0.92rem;
+    line-height: 1.7;
+    color: var(--text-muted);
+    max-width: 100%;
+  }
+
+  /* ══════════════════════════════
+     NOSOTROS PAGE
+  ══════════════════════════════ */
+
+  .page-hero {
+    background: linear-gradient(160deg, var(--sand) 0%, var(--foam) 100%);
+    padding: 5rem 8% 4rem;
+    border-bottom: 1px solid var(--sand-dark);
+  }
+
+  .page-hero .hero-tag { background: var(--ocean); color: white; border: none; }
+
+  .page-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 4vw, 3.5rem);
+    font-weight: 900;
+    color: var(--text);
+    line-height: 1.1;
+    max-width: 600px;
+    margin-bottom: 1rem;
+  }
+
+  .page-hero p {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 560px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .about-content {
+    padding: 5rem 8%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .about-text h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    margin-bottom: 1.2rem;
+    color: var(--text);
+  }
+
+  .about-text p {
+    font-size: 1rem;
+    line-height: 1.85;
+    color: var(--text-muted);
+    margin-bottom: 1.2rem;
+    font-weight: 300;
+  }
+
+  .values-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .values-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--foam);
+    border-radius: 12px;
+    border-left: 3px solid var(--ocean);
+  }
+
+  .values-list li .v-icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .values-list li strong { display: block; color: var(--text); margin-bottom: 3px; font-size: 0.95rem; }
+  .values-list li span { font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; }
+
+  .team-section {
+    background: var(--sand);
+    padding: 5rem 8%;
+  }
+
+  .team-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .team-card {
+    text-align: center;
+    background: white;
+    border-radius: 20px;
+    padding: 2rem 1.5rem;
+    border: 1px solid var(--sand-dark);
+  }
+
+  .team-avatar {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: white;
+  }
+
+  .team-card h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+  }
+
+  .team-card span {
+    font-size: 0.82rem;
+    color: var(--ocean);
+    font-weight: 500;
+  }
+
+  /* ══════════════════════════════
+     DONACIONES PAGE
+  ══════════════════════════════ */
+
+  .donate-hero {
+    background: linear-gradient(160deg, var(--ocean-deep), var(--ocean));
+    padding: 5rem 8% 4rem;
+    color: white;
+    text-align: center;
+  }
+
+  .donate-hero .hero-tag { background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); }
+
+  .donate-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    font-weight: 900;
+    margin-bottom: 1rem;
+  }
+
+  .donate-hero p {
+    font-size: 1.05rem;
+    opacity: 0.82;
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .donate-content {
+    padding: 5rem 8%;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .donate-form-card {
+    background: white;
+    border-radius: 24px;
+    padding: 2.5rem;
+    box-shadow: 0 4px 32px rgba(26,107,122,0.1);
+    border: 1px solid var(--foam);
+  }
+
+  .donate-form-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .donate-form-card > p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+  }
+
+  .amount-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .amount-btn {
+    padding: 12px 8px;
+    border: 1.5px solid var(--sand-dark);
+    border-radius: 12px;
+    background: var(--sand);
+    color: var(--earth);
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .amount-btn:hover, .amount-btn.selected {
+    background: var(--ocean);
+    color: white;
+    border-color: var(--ocean);
+  }
+
+  .form-group {
+    margin-bottom: 1.25rem;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .form-group input, .form-group select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid #e0ddd5;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    background: var(--white);
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  .form-group input:focus, .form-group select:focus {
+    border-color: var(--ocean);
+  }
+
+  .btn-donate {
+    width: 100%;
+    padding: 16px;
+    background: var(--ocean);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.25s;
+    margin-top: 0.5rem;
+  }
+
+  .btn-donate:hover { background: var(--ocean-deep); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(26,107,122,0.25); }
+
+  .bank-info {
+    background: var(--foam);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    border: 1px solid rgba(26,107,122,0.15);
+    display: none;
+  }
+
+  .bank-info.show { display: block; }
+
+  .bank-info h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: var(--ocean-deep);
+  }
+
+  .bank-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(26,107,122,0.1);
+    font-size: 0.88rem;
+  }
+
+  .bank-row:last-child { border-bottom: none; }
+  .bank-row span:first-child { color: var(--text-muted); }
+  .bank-row span:last-child { font-weight: 500; color: var(--text); }
+
+  .copy-btn-bank {
+    margin-top: 1rem;
+    width: 100%;
+    padding: 10px;
+    background: var(--ocean);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: background 0.2s;
+  }
+
+  .copy-btn-bank:hover { background: var(--ocean-deep); }
+
+  .donate-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .impact-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 1px solid var(--sand-dark);
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .impact-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    background: var(--foam);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+
+  .impact-card h4 { font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 4px; }
+  .impact-card p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
+
+  /* ══════════════════════════════
+     REDES PAGE
+  ══════════════════════════════ */
+
+  .social-hero {
+    background: linear-gradient(160deg, var(--seaweed) 0%, var(--ocean) 100%);
+    padding: 5rem 8% 4rem;
+    color: white;
+    text-align: center;
+  }
+
+  .social-hero .hero-tag { background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); }
+
+  .social-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    font-weight: 900;
+    margin-bottom: 1rem;
+  }
+
+  .social-hero p { font-size: 1.05rem; opacity: 0.82; max-width: 520px; margin: 0 auto; line-height: 1.7; font-weight: 300; }
+
+  .social-content { padding: 5rem 8%; }
+
+  .social-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
+
+  .social-card {
+    border-radius: 24px;
+    overflow: hidden;
+    border: 1px solid #e8e4da;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .social-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.1); }
+
+  .social-card-header {
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .ig-header { background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+  .fb-header { background: #1877f2; }
+
+  .social-card-header .s-icon {
+    width: 48px; height: 48px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+  }
+
+  .social-card-header .s-info h3 { color: white; font-size: 1.1rem; }
+  .social-card-header .s-info span { color: rgba(255,255,255,0.75); font-size: 0.82rem; }
+
+  .social-card-body {
+    padding: 1.5rem 2rem 2rem;
+    background: white;
+  }
+
+  .social-card-body p {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+  }
+
+  .btn-social {
+    display: inline-block;
+    padding: 10px 24px;
+    border-radius: 24px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: 1.5px solid;
+  }
+
+  .btn-ig { color: #dc2743; border-color: #dc2743; }
+  .btn-ig:hover { background: #dc2743; color: white; }
+
+  .btn-fb { color: #1877f2; border-color: #1877f2; }
+  .btn-fb:hover { background: #1877f2; color: white; }
+
+  .feed-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .feed-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .feed-item {
+    aspect-ratio: 1;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .feed-item-bg {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    transition: transform 0.3s;
+  }
+
+  .feed-item:hover .feed-item-bg { transform: scale(1.05); }
+
+  .feed-item-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(13,74,86,0.85) 0%, transparent 60%);
+    display: flex;
+    align-items: flex-end;
+    padding: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .feed-item:hover .feed-item-overlay { opacity: 1; }
+  .feed-item-overlay span { color: white; font-size: 0.78rem; line-height: 1.4; }
+
+  .newsletter-strip {
+    background: var(--sand);
+    border-radius: 24px;
+    padding: 3rem;
+    margin-top: 3rem;
+    text-align: center;
+    border: 1px solid var(--sand-dark);
+  }
+
+  .newsletter-strip h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .newsletter-strip p { font-size: 0.92rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+
+  .newsletter-form {
+    display: flex;
+    gap: 0.75rem;
+    max-width: 440px;
+    margin: 0 auto;
+  }
+
+  .newsletter-form input {
+    flex: 1;
+    padding: 12px 18px;
+    border: 1.5px solid var(--sand-dark);
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-family: 'DM Sans', sans-serif;
+    background: white;
+    outline: none;
+  }
+
+  .newsletter-form input:focus { border-color: var(--ocean); }
+
+  .newsletter-form button {
+    padding: 12px 24px;
+    background: var(--ocean);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+
+  .newsletter-form button:hover { background: var(--ocean-deep); }
+
+  /* ══════════════════════════════
+     TIENDA PAGE
+  ══════════════════════════════ */
+
+  .shop-hero {
+    background: linear-gradient(160deg, var(--earth) 0%, var(--earth-light) 100%);
+    padding: 5rem 8% 4rem;
+    color: white;
+    text-align: center;
+  }
+
+  .shop-hero .hero-tag { background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); }
+
+  .shop-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    font-weight: 900;
+    margin-bottom: 1rem;
+  }
+
+  .shop-hero p { font-size: 1.05rem; opacity: 0.82; max-width: 520px; margin: 0 auto; line-height: 1.7; font-weight: 300; }
+
+  .shop-content { padding: 5rem 8%; }
+
+  .shop-filters {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    padding: 8px 20px;
+    border-radius: 24px;
+    border: 1.5px solid #ddd;
+    background: white;
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-muted);
+  }
+
+  .filter-btn.active, .filter-btn:hover {
+    background: var(--ocean);
+    color: white;
+    border-color: var(--ocean);
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .product-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid #ede9de;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .product-card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(0,0,0,0.1); }
+
+  .product-img {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    position: relative;
+  }
+
+  .product-badge {
+    position: absolute;
+    top: 12px; left: 12px;
+    background: var(--seaweed-light);
+    color: white;
+    font-size: 0.72rem;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 12px;
+  }
+
+  .product-info {
+    padding: 1.25rem 1.5rem 1.5rem;
+  }
+
+  .product-info h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    margin-bottom: 6px;
+  }
+
+  .product-info p {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+
+  .product-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .product-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--ocean-deep);
+  }
+
+  .product-price span {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    display: block;
+    margin-top: -2px;
+  }
+
+  .btn-cart {
+    background: var(--ocean);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .btn-cart:hover { background: var(--ocean-deep); transform: scale(1.03); }
+
+  .shop-banner {
+    background: linear-gradient(135deg, var(--ocean-deep), var(--seaweed));
+    border-radius: 24px;
+    padding: 3rem;
+    margin-top: 3rem;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .shop-banner h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .shop-banner p { font-size: 0.9rem; opacity: 0.8; max-width: 360px; line-height: 1.6; }
+
+  .shop-banner a {
+    flex-shrink: 0;
+    background: var(--sand);
+    color: var(--earth);
+    padding: 14px 28px;
+    border-radius: 28px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .shop-banner a:hover { background: white; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ocean-deep);
+    color: rgba(255,255,255,0.7);
+    padding: 4rem 8% 2rem;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 3rem;
+  }
+
+  .footer-brand h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: white;
+    margin-bottom: 0.75rem;
+  }
+
+  .footer-brand p { font-size: 0.88rem; line-height: 1.7; max-width: 280px; }
+
+  .footer-col h4 {
+    color: white;
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+  .footer-col ul li a {
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: color 0.2s;
+    cursor: pointer;
+  }
+  .footer-col ul li a:hover { color: white; }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.82rem;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--ocean-deep);
+    color: white;
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    z-index: 9999;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  }
+
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .nav-links.open {
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 68px; left: 0; right: 0;
+      background: var(--white);
+      padding: 1.5rem 5%;
+      border-bottom: 1px solid var(--sand-dark);
+      gap: 1rem;
+      z-index: 99;
+    }
+    .hamburger { display: flex; }
+    .mission-grid, .about-content, .donate-content { grid-template-columns: 1fr; }
+    .pillars-grid, .team-grid { grid-template-columns: 1fr; }
+    .social-cards { grid-template-columns: 1fr; }
+    .products-grid { grid-template-columns: 1fr 1fr; }
+    .stats-strip { grid-template-columns: 1fr; gap: 1.5rem; }
+    .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .shop-banner { flex-direction: column; }
+    .newsletter-form { flex-direction: column; }
+    .feed-grid { grid-template-columns: 1fr 1fr; }
+    .footer-bottom { flex-direction: column; gap: 0.75rem; text-align: center; }
+  }
+
+  @media (max-width: 480px) {
+    .products-grid { grid-template-columns: 1fr; }
+    .amount-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a class="nav-logo" href="#" onclick="showPage('home')">
+    <span></span>
+    Olas Limpias
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#" onclick="showPage('home')" class="active" id="nav-home">Inicio</a></li>
+    <li><a href="#" onclick="showPage('nosotros')" id="nav-nosotros">Nosotros</a></li>
+    <li><a href="#" onclick="showPage('donaciones')" id="nav-donaciones">Donar</a></li>
+    <li><a href="#" onclick="showPage('redes')" id="nav-redes">Redes</a></li>
+    <li><a href="#" onclick="showPage('tienda')" id="nav-tienda">Tienda</a></li>
+    <li><a href="#" onclick="showPage('donaciones')" class="nav-cta">¡Donar ahora!</a></li>
+  </ul>
+  <div class="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ══ HOME ══ -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-tag">🌊 ONG Ambiental · Chile</div>
+      <h1>Por <em>mares limpios</em> y costas que respiran</h1>
+      <p>Somos voluntarios chilenos comprometidos con la limpieza de playas, el reciclaje y la conservación de nuestra vida marina. Cada acción cuenta.</p>
+      <div class="hero-btns">
+        <a href="#" class="btn-primary" onclick="showPage('donaciones')">Quiero donar</a>
+        <a href="#" class="btn-outline" onclick="showPage('nosotros')">Conoce la ONG</a>
+      </div>
+    </div>
+    <svg class="hero-wave" viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" fill="#fdfcf9"/>
+    </svg>
+  </section>
+
+  <div class="stats-strip">
+    <div class="fade-in">
+      <span class="stat-num">48+</span>
+      <span class="stat-label">Playas limpiadas en Chile</span>
+    </div>
+    <div class="fade-in">
+      <span class="stat-num">12 ton</span>
+      <span class="stat-label">Residuos recolectados</span>
+    </div>
+    <div class="fade-in">
+      <span class="stat-num">2.400</span>
+      <span class="stat-label">Voluntarios activos</span>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="mission-grid">
+      <div class="fade-in">
+        <span class="section-label">Nuestra misión</span>
+        <h2>Cuidar el océano es cuidar el futuro</h2>
+        <p>Olas Limpias nació del amor por nuestras costas y la urgencia de protegerlas. Organizamos jornadas de limpieza a lo largo del litoral chileno, educamos a comunidades sobre el impacto de los residuos y promovemos hábitos sustentables.</p>
+        <br><br>
+        <a href="#" class="btn-primary" onclick="showPage('nosotros')" style="background:var(--ocean);color:white;">Leer más sobre nosotros</a>
+      </div>
+      <div class="mission-visual fade-in">
+        <img src="Logo-olas-limpias.png" alt="Olas Limpias" style="width:100%;height:100%;object-fit:cover;">
+        <div class="mission-badge">
+          <strong>Desde 2018</strong>
+          <span>Protegiendo las costas chilenas</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pillars">
+    <div class="pillars-header fade-in">
+      <span class="section-label">Lo que hacemos</span>
+      <h2>Tres pilares de acción</h2>
+    </div>
+    <div class="pillars-grid">
+      <div class="pillar-card fade-in">
+        <div class="pillar-icon ocean">🌊</div>
+        <h3>Limpieza de playas</h3>
+        <p>Organizamos jornadas mensuales en playas de todo Chile para remover plásticos, microplásticos y residuos que amenazan los ecosistemas costeros.</p>
+      </div>
+      <div class="pillar-card fade-in">
+        <div class="pillar-icon earth">♻️</div>
+        <h3>Reciclaje y educación</h3>
+        <p>Talleres en colegios y comunidades para enseñar separación de residuos, reducción del plástico de un solo uso y economía circular.</p>
+      </div>
+      <div class="pillar-card fade-in">
+        <div class="pillar-icon people">🐬</div>
+        <h3>Conservación marina</h3>
+        <p>Monitoreo de fauna costera, rescate de animales marinos y trabajo junto a pescadores artesanales para proteger los ecosistemas submarinos.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══ NOSOTROS ══ -->
+<div class="page" id="page-nosotros">
+  <div class="page-hero">
+    <span class="hero-tag">Quiénes somos</span>
+    <h1>Una comunidad que ama el mar</h1>
+    <p>Somos voluntarios, ambientalistas y ciudadanos convencidos de que el cambio comienza con acciones concretas en nuestras propias costas.</p>
+  </div>
+
+  <div class="about-content">
+    <div class="about-text fade-in">
+      <h2>Nuestra historia</h2>
+      <p>Olas Limpias nació en 2019 en La Serena, cuando un grupo de amigos llegó a la playa y encontró más basura que arena. Lo que comenzó como una limpieza espontánea entre vecinos se transformó en una organización con presencia en todo el litoral chileno.</p>
+      <p>Hoy contamos con más de 2.400 voluntarios activos desde Arica hasta Puerto Montt, hemos limpiado más de 48 playas y recolectado más de 12 toneladas de residuos. Pero el trabajo recién comienza.</p>
+      <p>Somos una ONG sin fines de lucro. Cada peso donado va directamente a financiar jornadas de limpieza, materiales de educación y equipos para nuestros voluntarios.</p>
+    </div>
+    <div class="fade-in">
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:1.5rem;">Nuestros valores</h2>
+      <ul class="values-list">
+        <li>
+          <span class="v-icon">🌿</span>
+          <div>
+            <strong>Respeto por la naturaleza</strong>
+            <span>Actuamos con la convicción de que somos parte del ecosistema, no sus dueños.</span>
+          </div>
+        </li>
+        <li>
+          <span class="v-icon">🤝</span>
+          <div>
+            <strong>Comunidad y colaboración</strong>
+            <span>Creemos que el cambio real ocurre cuando las personas se unen por un propósito común.</span>
+          </div>
+        </li>
+        <li>
+          <span class="v-icon">🔬</span>
+          <div>
+            <strong>Acción basada en evidencia</strong>
+            <span>Medimos nuestro impacto y tomamos decisiones informadas por ciencia.</span>
+          </div>
+        </li>
+        <li>
+          <span class="v-icon">💡</span>
+          <div>
+            <strong>Educación permanente</strong>
+            <span>Formamos personas que multiplican el impacto en sus propias comunidades.</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="team-section">
+    <h2>Equipo fundador</h2>
+    <div class="team-grid">
+      <div class="team-card fade-in">
+        <div class="team-avatar" style="background:var(--ocean);">CM</div>
+        <h4>Carla Morales</h4>
+        <span>Directora Ejecutiva</span>
+      </div>
+      <div class="team-card fade-in">
+        <div class="team-avatar" style="background:var(--seaweed);">JR</div>
+        <h4>Jorge Riquelme</h4>
+        <span>Coordinador de Terreno</span>
+      </div>
+      <div class="team-card fade-in">
+        <div class="team-avatar" style="background:var(--earth);">SP</div>
+        <h4>Sofía Palma</h4>
+        <span>Educación Ambiental</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DONACIONES ══ -->
+<div class="page" id="page-donaciones">
+  <div class="donate-hero">
+    <span class="hero-tag">Haz la diferencia</span>
+    <h1>Tu donación limpia una playa</h1>
+    <p>Con tu apoyo financiamos jornadas de limpieza, materiales educativos y equipamiento para miles de voluntarios en Chile.</p>
+  </div>
+
+  <div class="donate-content">
+    <div>
+      <div class="donate-form-card fade-in">
+        <h3>Realizar donación</h3>
+        <p>Elige el monto o ingresa uno personalizado</p>
+
+        <div class="amount-grid" id="amountGrid">
+          <button class="amount-btn" onclick="selectAmount(this, 5000)">$5.000</button>
+          <button class="amount-btn" onclick="selectAmount(this, 10000)">$10.000</button>
+          <button class="amount-btn selected" onclick="selectAmount(this, 20000)">$20.000</button>
+          <button class="amount-btn" onclick="selectAmount(this, 50000)">$50.000</button>
+          <button class="amount-btn" onclick="selectAmount(this, 100000)">$100.000</button>
+          <button class="amount-btn" onclick="selectAmount(this, 0)">Otro</button>
+        </div>
+
+        <div class="form-group" id="customAmountGroup" style="display:none;">
+          <label>Monto personalizado (CLP)</label>
+          <input type="number" id="customAmount" placeholder="Ingresa el monto" min="1000">
+        </div>
+
+        <div class="form-group">
+          <label>Nombre completo</label>
+          <input type="text" id="donorName" placeholder="Tu nombre">
+        </div>
+
+        <div class="form-group">
+          <label>Correo electrónico</label>
+          <input type="email" id="donorEmail" placeholder="tu@correo.cl">
+        </div>
+
+        <div class="form-group">
+          <label>Método de donación</label>
+          <select id="payMethod" onchange="toggleBankInfo()">
+            <option value="transfer">Transferencia bancaria</option>
+          </select>
+        </div>
+
+        <button class="btn-donate" onclick="processDonation()">Ver datos para transferir →</button>
+
+        <div class="bank-info" id="bankInfo">
+          <h4>📋 Datos para transferencia</h4>
+          <div class="bank-row"><span>Banco</span><span>Banco Estado</span></div>
+          <div class="bank-row"><span>Titular</span><span>ONG Olas Limpias</span></div>
+          <div class="bank-row"><span>RUT</span><span>76.XXX.XXX-X</span></div>
+          <div class="bank-row"><span>Tipo de cuenta</span><span>Cuenta Corriente</span></div>
+          <div class="bank-row"><span>N° de cuenta</span><span>XXXX-XXXX-XX</span></div>
+          <div class="bank-row"><span>Correo</span><span>donaciones@olaslimpias.cl</span></div>
+          <button class="copy-btn-bank" onclick="copyBankInfo()">Copiar datos bancarios</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="donate-info">
+      <div class="impact-card fade-in">
+        <div class="impact-icon">🗑️</div>
+        <div>
+          <h4>$5.000 = 1 jornada de limpieza</h4>
+          <p>Financia los guantes, bolsas y materiales para un voluntario en una jornada completa de limpieza de playa.</p>
+        </div>
+      </div>
+      <div class="impact-card fade-in">
+        <div class="impact-icon">📚</div>
+        <div>
+          <h4>$20.000 = Taller educativo</h4>
+          <p>Cubre el costo de materiales para un taller de educación ambiental en una escuela chilena.</p>
+        </div>
+      </div>
+      <div class="impact-card fade-in">
+        <div class="impact-icon">🌊</div>
+        <div>
+          <h4>$100.000 = Operativo completo</h4>
+          <p>Financia un operativo de limpieza para 20 voluntarios, incluyendo transporte, equipos y procesamiento de residuos.</p>
+        </div>
+      </div>
+      <div class="impact-card fade-in">
+        <div class="impact-icon">🤝</div>
+        <div>
+          <h4>Donación con certificado</h4>
+          <p>Todas las donaciones reciben un certificado de contribución ambiental con tu nombre y el impacto generado.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ REDES ══ -->
+<div class="page" id="page-redes">
+  <div class="social-hero">
+    <span class="hero-tag">Síguenos</span>
+    <h1>Únete al movimiento</h1>
+    <p>Sigue nuestras redes para ver el impacto en tiempo real, conocer las próximas jornadas y ser parte de la comunidad.</p>
+  </div>
+
+  <div class="social-content">
+    <div class="social-cards">
+      <div class="social-card fade-in">
+        <div class="social-card-header ig-header">
+          <div class="s-icon">📷</div>
+          <div class="s-info">
+            <h3>Instagram</h3>
+            <span>@olaslimpias.cl</span>
+          </div>
+        </div>
+        <div class="social-card-body">
+          <p>Fotos de nuestras jornadas de limpieza, videos del antes y después de las playas, historias de voluntarios y contenido educativo sobre el medioambiente.</p>
+          <a href="https://instagram.com/olaslimpias" target="_blank" class="btn-social btn-ig">Seguir en Instagram →</a>
+        </div>
+      </div>
+
+      <div class="social-card fade-in">
+        <div class="social-card-header fb-header">
+          <div class="s-icon">👥</div>
+          <div class="s-info">
+            <h3>Facebook</h3>
+            <span>Olas Limpias Chile</span>
+          </div>
+        </div>
+        <div class="social-card-body">
+          <p>Eventos, convocatorias a voluntariado, transmisiones en vivo de nuestras jornadas y noticias sobre conservación marina en Chile y Latinoamérica.</p>
+          <a href="https://facebook.com/olaslimpias" target="_blank" class="btn-social btn-fb">Seguir en Facebook →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="feed-section fade-in">
+      <h2>Momentos de acción</h2>
+      <div class="feed-grid">
+        <div class="feed-item">
+          <div class="feed-item-bg" style="background:linear-gradient(135deg,#1a6b7a,#3a9cb0)">🏖️</div>
+          <div class="feed-item-overlay"><span>Jornada La Serena · 120 voluntarios</span></div>
+        </div>
+        <div class="feed-item">
+          <div class="feed-item-bg" style="background:linear-gradient(135deg,#3d6b3e,#5a9e5c)">♻️</div>
+          <div class="feed-item-overlay"><span>Taller reciclaje Coquimbo · 45 niños</span></div>
+        </div>
+        <div class="feed-item">
+          <div class="feed-item-bg" style="background:linear-gradient(135deg,#5c4a2a,#8a7355)">🐢</div>
+          <div class="feed-item-overlay"><span>Rescate de tortuga en Tongoy</span></div>
+        </div>
+        <div class="feed-item">
+          <div class="feed-item-bg" style="background:linear-gradient(135deg,#0d4a56,#1a6b7a)">🌊</div>
+          <div class="feed-item-overlay"><span>Viña del Mar · 2 ton recolectadas</span></div>
+        </div>
+        <div class="feed-item">
+          <div class="feed-item-bg" style="background:linear-gradient(135deg,#3a9cb0,#5abdcf)">📸</div>
+          <div class="feed-item-overlay"><span>Playa Blanca antes y después</span></div>
+        </div>
+        <div class="feed-item">
+          <div class="feed-item-bg" style="background:linear-gradient(135deg,#2d6b3e,#4a9e5c)">🌿</div>
+          <div class="feed-item-overlay"><span>Capacitación voluntarios 2024</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="newsletter-strip fade-in">
+      <h3>Recibe nuestro boletín mensual</h3>
+      <p>Entérate primero de las próximas jornadas, logros del mes y cómo puedes participar como voluntario.</p>
+      <div class="newsletter-form">
+        <input type="email" id="nlEmail" placeholder="tu@correo.cl">
+        <button onclick="subscribeNewsletter()">Suscribirme</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TIENDA ══ -->
+<div class="page" id="page-tienda">
+  <div class="shop-hero">
+    <span class="hero-tag">Tienda solidaria</span>
+    <h1>Compra con propósito</h1>
+    <p>Cada producto que compras financia directamente nuestras operaciones de limpieza y conservación costera en Chile.</p>
+  </div>
+
+  <div class="shop-content">
+    <div class="shop-filters">
+      <button class="filter-btn active" onclick="filterProducts(this,'todos')">Todos</button>
+      <button class="filter-btn" onclick="filterProducts(this,'ropa')">Ropa</button>
+      <button class="filter-btn" onclick="filterProducts(this,'accesorios')">Accesorios</button>
+      <button class="filter-btn" onclick="filterProducts(this,'hogar')">Hogar</button>
+    </div>
+
+    <div class="products-grid" id="productsGrid">
+      <div class="product-card fade-in" data-category="ropa">
+        <div class="product-img" style="background:linear-gradient(135deg,#e8f4f7,#c5e8f0)">
+          👕
+          <span class="product-badge">Más vendido</span>
+        </div>
+        <div class="product-info">
+          <h4>Polera Olas Limpias</h4>
+          <p>100% algodón orgánico. Diseño exclusivo con nuestro logo y mensaje ambiental. Disponible en S, M, L, XL.</p>
+          <div class="product-footer">
+            <div class="product-price">$18.000 <span>CLP + despacho</span></div>
+            <button class="btn-cart" onclick="addToCart('Polera Olas Limpias')">Pedir</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card fade-in" data-category="accesorios">
+        <div class="product-img" style="background:linear-gradient(135deg,#e8f0df,#c8e0b8)">
+          🎒
+        </div>
+        <div class="product-info">
+          <h4>Bolsa de tela reutilizable</h4>
+          <p>Lona natural resistente. Perfecta para reemplazar bolsas plásticas. Estampada a mano con tinta ecológica.</p>
+          <div class="product-footer">
+            <div class="product-price">$8.500 <span>CLP + despacho</span></div>
+            <button class="btn-cart" onclick="addToCart('Bolsa de tela')">Pedir</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card fade-in" data-category="hogar">
+        <div class="product-img" style="background:linear-gradient(135deg,#fdf3e0,#f5d99a)">
+          🕯️
+          <span class="product-badge">Edición limitada</span>
+        </div>
+        <div class="product-info">
+          <h4>Vela de cera de soya</h4>
+          <p>Aroma a brisa marina. Elaborada con ingredientes naturales. Envase de vidrio reciclado reutilizable.</p>
+          <div class="product-footer">
+            <div class="product-price">$12.000 <span>CLP + despacho</span></div>
+            <button class="btn-cart" onclick="addToCart('Vela de cera de soya')">Pedir</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card fade-in" data-category="accesorios">
+        <div class="product-img" style="background:linear-gradient(135deg,#dff0f4,#a5d8e8)">
+          🧴
+        </div>
+        <div class="product-info">
+          <h4>Kit de limpieza de playa</h4>
+          <p>Guantes reutilizables, pinzas de bambú y bolsa de malla para recolectar residuos. Ideal para voluntarios.</p>
+          <div class="product-footer">
+            <div class="product-price">$15.000 <span>CLP + despacho</span></div>
+            <button class="btn-cart" onclick="addToCart('Kit de limpieza')">Pedir</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card fade-in" data-category="ropa">
+        <div class="product-img" style="background:linear-gradient(135deg,#e8e4f0,#c8c0e8)">
+          🧢
+        </div>
+        <div class="product-info">
+          <h4>Gorra bordada</h4>
+          <p>Ajustable, 100% algodón. Logo bordado de Olas Limpias. Protección solar para tus jornadas en la playa.</p>
+          <div class="product-footer">
+            <div class="product-price">$12.500 <span>CLP + despacho</span></div>
+            <button class="btn-cart" onclick="addToCart('Gorra bordada')">Pedir</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card fade-in" data-category="hogar">
+        <div class="product-img" style="background:linear-gradient(135deg,#f0e8e0,#e0c8b0)">
+          🪣
+        </div>
+        <div class="product-info">
+          <h4>Set bambu de cocina</h4>
+          <p>Cuchara, espátula y tenedor de bambú. Reemplaza utensilios plásticos. Empaque completamente reciclable.</p>
+          <div class="product-footer">
+            <div class="product-price">$9.900 <span>CLP + despacho</span></div>
+            <button class="btn-cart" onclick="addToCart('Set bambú')">Pedir</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="shop-banner fade-in">
+      <div>
+        <h3>¿Quieres pedir al por mayor?</h3>
+        <p>Si eres empresa, colegio o agrupación y quieres apoyarnos con una compra mayor, escríbenos y te damos un precio especial.</p>
+      </div>
+      <a href="mailto:tienda@olaslimpias.cl">Contactar →</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <h3>🌊 Olas Limpias</h3>
+      <p>ONG chilena dedicada a la limpieza de playas, educación ambiental y conservación marina desde 2019.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navegación</h4>
+      <ul>
+        <li><a onclick="showPage('home')">Inicio</a></li>
+        <li><a onclick="showPage('nosotros')">Nosotros</a></li>
+        <li><a onclick="showPage('donaciones')">Donar</a></li>
+        <li><a onclick="showPage('redes')">Redes sociales</a></li>
+        <li><a onclick="showPage('tienda')">Tienda</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contacto</h4>
+      <ul>
+        <li><a>contacto@olaslimpias.cl</a></li>
+        <li><a>La Serena, Chile</a></li>
+        <li><a href="https://instagram.com/olaslimpias" target="_blank">Instagram</a></li>
+        <li><a href="https://facebook.com/olaslimpias" target="_blank">Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 Olas Limpias · ONG sin fines de lucro · Chile</span>
+    <span>Hecho con 🌊 por voluntarios</span>
+  </div>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  let selectedAmount = 20000;
+
+  function showPage(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
+    document.querySelectorAll('.nav-links a[id^="nav-"]').forEach(a => a.classList.remove('active'));
+    const navEl = document.getElementById('nav-' + page);
+    if (navEl) navEl.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('navLinks').classList.remove('open');
+    initFadeIn();
+  }
+
+  function toggleMenu() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+
+  function selectAmount(btn, amount) {
+    document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedAmount = amount;
+    document.getElementById('customAmountGroup').style.display = amount === 0 ? 'block' : 'none';
+    document.getElementById('bankInfo').classList.remove('show');
+  }
+
+  function processDonation() {
+    const name = document.getElementById('donorName').value.trim();
+    const email = document.getElementById('donorEmail').value.trim();
+    const amount = selectedAmount === 0
+      ? parseInt(document.getElementById('customAmount').value) || 0
+      : selectedAmount;
+
+    if (!name) { showToast('Por favor ingresa tu nombre'); return; }
+    if (!email) { showToast('Por favor ingresa tu correo'); return; }
+    if (amount < 1000) { showToast('El monto mínimo es $1.000 CLP'); return; }
+
+    document.getElementById('bankInfo').classList.add('show');
+    showToast('¡Gracias ' + name.split(' ')[0] + '! Aquí están los datos para tu donación de $' + amount.toLocaleString('es-CL'));
+  }
+
+  function copyBankInfo() {
+    const info = `ONG Olas Limpias\nBanco Estado\nCuenta Corriente: XXXX-XXXX-XX\nRUT: 76.XXX.XXX-X\nCorreo: donaciones@olaslimpias.cl`;
+    navigator.clipboard.writeText(info).then(() => showToast('¡Datos bancarios copiados!'));
+  }
+
+  function toggleBankInfo() {}
+
+  function addToCart(product) {
+    showToast('¡"' + product + '" agregado! Te contactaremos por correo para coordinar el pago y envío.');
+  }
+
+  function filterProducts(btn, category) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.product-card').forEach(card => {
+      if (category === 'todos' || card.dataset.category === category) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  function subscribeNewsletter() {
+    const email = document.getElementById('nlEmail').value.trim();
+    if (!email) { showToast('Ingresa tu correo'); return; }
+    showToast('¡Gracias! Te hemos suscrito al boletín mensual.');
+    document.getElementById('nlEmail').value = '';
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3500);
+  }
+
+  function initFadeIn() {
+    setTimeout(() => {
+      document.querySelectorAll('.page.active .fade-in').forEach((el, i) => {
+        setTimeout(() => el.classList.add('visible'), i * 80);
+      });
+    }, 50);
+  }
+
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+    document.querySelectorAll('.page.active .fade-in:not(.visible)').forEach(el => {
+      if (el.getBoundingClientRect().top < window.innerHeight - 60) {
+        el.classList.add('visible');
+      }
+    });
+  });
+
+  initFadeIn();
+</script>
+</body>
+</html>
